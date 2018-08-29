@@ -58,9 +58,7 @@ def generate_sequence( max ) :
     :param max: The max number in sequence
     :return: The resulting sequence as a list
     """
-    sequence = []
-    for nextNumber in range(1,max) :
-        sequence.append(nextNumber)
+    sequence = list(range(1, 41))
     return sequence
 
 
