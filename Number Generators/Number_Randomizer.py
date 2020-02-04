@@ -82,8 +82,7 @@ def main(argv):
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print
-            'Number_Randomizer.py -l | --lines (Set number of lines. MIN = 1) -s | --size (Set Numbers per line. MIN = 5) -r | --randpower (Force random power per line)'
+            print('Number_Randomizer.py -l OR --lines (Set number of lines. MIN = 1) -s OR --size (Set Numbers per line. MIN = 5) -r OR --randpower (Force random power per line)')
             sys.exit()
         if opt in ("-l", "--lines"):
             numLines = arg
