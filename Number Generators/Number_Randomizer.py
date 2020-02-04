@@ -4,6 +4,7 @@
 '''
 
 import random
+import sys, getopt
 
 powerNumbers = list(range(1,11))
 
@@ -61,9 +62,52 @@ def generate_sequence( max ) :
     sequence = list(range(1, 41))
     return sequence
 
+def main(argv):
+    ## Check run arguments
+    """if len(sys.argv) is 0 :
+        print("No user parameters entered!")
+    else :
+        print(str(sys.argv))"""
 
-### Specifying power numbers using range()
-powers = list(range(1,11))
+    """
+    Runtime args:
+    -l = number of lines
+    -s = how many numbers per line
+    -r = true/false set random power numbers (False = same power number per line)
+    """
+    try:
+        opts, args = getopt.getopt(argv, "l:s:rh", ["lines=", "size=", "randpower", "help"])
+    except getopt.GetoptError:
+        print('Number_Randomizer.py -l <number of lines> -s <numbers per line> -r (Force random power per line)')
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print
+            'Number_Randomizer.py -l | --lines (Set number of lines. MIN = 1) -s | --size (Set Numbers per line. MIN = 5) -r | --randpower (Force random power per line)'
+            sys.exit()
+        if opt in ("-l", "--lines"):
+            numLines = arg
+            if arg.isdigit():
+                numLines = int(arg)
+                print("numbLines {}".format(numLines))
+        if opt in ("-s", "--size"):
+            if arg.isdigit() :
+                lineLength = int(arg)
+                print("lineLength {}".format(lineLength))
+        if opt in ("-r", "--randpower"):
+            randPower = True
+            print("randPower {}".format(randPower))
+        #check = "ARGS: numLines {} lineLength {} randPower {}".format(numLines,lineLength,randPower)
+        #Sprint(check)
+    ### Specifying power numbers using range()
+    powers = list(range(1,11))
 
-randomizer_seq(generate_sequence(41),powers,False, 4, 6)
-#randomizer_seq(generate_sequence(15),generate_sequence(21),False, 10, 6)
+    randomizer_seq(generate_sequence(41),powers,randPower, numLines, lineLength)
+    #randomizer_seq(generate_sequence(15),generate_sequence(21),False, 10, 6)
+
+numLines = 1
+lineLength = 5
+randPower = False
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
