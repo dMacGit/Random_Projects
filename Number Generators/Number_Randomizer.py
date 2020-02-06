@@ -3,10 +3,17 @@
     and randomly selects from them 'n' number of times for some resulting sequence
 '''
 
+import Exceptions
 import random
 import sys, getopt
 
 powerNumbers = list(range(1,11))
+
+DEFAULT_MAX_GenNumber = 40
+DEFAULT_MIN_Size = 4
+DEFAULT_MAX_Size = 10
+DEFAULT_MIN_Lines = 1
+DEFAULT_MAX_Lines = 24
 
 def randomizer_seq (sequence,power=powerNumbers[::], forceRandPower=False, outputLines=1, outputLineSize=5) :
 
@@ -62,13 +69,41 @@ def generate_sequence( max ) :
     sequence = list(range(1, max+1))
     return sequence
 
+def validate_size(arg,max=DEFAULT_MAX_Size):
+    num = 0
+    if arg.isdigit() and (int(arg) >= 0):
+        num = int(arg)
+    else :
+        raise Exceptions.SizeNumberValueError
+
+    if num < 1 :
+        raise Exceptions.SizeNumberTooSmall
+    elif num > max :
+        raise Exceptions.SizeNumberTooBig
+
+    return num
+
+def validate_LineNum(arg,min=DEFAULT_MIN_Lines,max=DEFAULT_MAX_Lines):
+    numLines = 0
+    if arg.isdigit() and (int(arg) >= 0):
+        numLines = int(arg)
+    else :
+        raise Exceptions.LineNumberValueError
+
+    if numLines < min:
+        raise Exceptions.LineNumberTooSmall
+    elif numLines > max :
+        raise Exceptions.LineNumberTooBig
+
+    return numLines
+
 def main(argv):
     powers = list(range(1, 11))
     numberSeqSize = 40
     randPower = False
     numLines = 4
     lineLength = 6
-    
+
     ## Check run arguments
     if len(sys.argv) is 1 :
         print("No user parameters entered!","Using Defaults:","\n","Lines = 4, Size = 6, Random Powers = False")
@@ -88,29 +123,39 @@ def main(argv):
         except getopt.GetoptError:
             print('Number_Randomizer.py -l <number of lines> -s <numbers per line> -r (Force random power per line)')
             sys.exit(2)
-        for opt, arg in opts:
-            if opt == '-h':
-                print('Number_Randomizer.py -l OR --lines (Set number of lines. MIN = 1) -s OR --size (Set Numbers per line. MIN = 5) -r OR --randpower (Force random power per line)')
-                sys.exit()
-            if opt in ("-l", "--lines"):
-                numLines = arg
-                if arg.isdigit():
-                    numLines = int(arg)
+        try:
+            for opt, arg in opts:
+                if opt == '-h':
+                    print('Number_Randomizer.py -l OR --lines (Set number of lines. MIN = 1) -s OR --size (Set Numbers per line. MIN = 5) -r OR --randpower (Force random power per line)')
+                    sys.exit()
+                if opt in ("-l", "--lines"):
+                    numLines = validate_LineNum(arg)
                     print("numbLines {}".format(numLines))
-            if opt in ("-s", "--size"):
-                if arg.isdigit() :
-                    lineLength = int(arg)
+                if opt in ("-s", "--size"):
+                    lineLength = validate_size(arg)
                     print("lineLength {}".format(lineLength))
-            if opt in ("-r", "--randpower"):
-                randPower = True
-                print("randPower {}".format(randPower))
-            #check = "ARGS: numLines {} lineLength {} randPower {}".format(numLines,lineLength,randPower)
-            #Sprint(check)
-        ### Specifying power numbers using range()
+                if opt in ("-r", "--randpower"):
+                    randPower = True
+                    print("randPower {}".format(randPower))
+                #check = "ARGS: numLines {} lineLength {} randPower {}".format(numLines,lineLength,randPower)
+                #Sprint(check)
+            ### Specifying power numbers using range()
 
-
-        randomizer_seq(generate_sequence(41),powers,randPower, numLines, lineLength)
-        #randomizer_seq(generate_sequence(15),generate_sequence(21),False, 10, 6)
+            print(" Lines = {} Size = {} Random Powers = {}".format(numLines,lineLength,randPower))
+            randomizer_seq(generate_sequence(41),powers,randPower, numLines, lineLength)
+            #randomizer_seq(generate_sequence(15),generate_sequence(21),False, 10, 6)
+        except Exceptions.LineNumberTooBig:
+            print("Line Number Value is above the max bound",DEFAULT_MAX_Lines)
+        except Exceptions.LineNumberTooSmall:
+            print("Line Number Value is below the min bound",DEFAULT_MIN_Lines)
+        except Exceptions.LineNumberValueError:
+            print("Line Number Value is not Vaild","Must be >= 0")
+        except Exceptions.SizeNumberTooSmall:
+            print("Size Number Value is below the min bound",DEFAULT_MIN_Size)
+        except Exceptions.SizeNumberTooBig:
+            print("Size Number Value is above the max bound",DEFAULT_MAX_Size)
+        except Exceptions.SizeNumberValueError:
+            print("Size Number Value is not Vaild", "Must be >= 0")
 
 numLines = 1
 lineLength = 5
