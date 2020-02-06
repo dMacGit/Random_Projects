@@ -8,7 +8,7 @@ import sys, getopt
 
 powerNumbers = list(range(1,11))
 
-def randomizer_seq (sequence,power=powerNumbers[::], samePower=False, outputLines=1, outputLineSize=5) :
+def randomizer_seq (sequence,power=powerNumbers[::], forceRandPower=False, outputLines=1, outputLineSize=5) :
 
     format_string = ""
     count = 0
@@ -45,7 +45,7 @@ def randomizer_seq (sequence,power=powerNumbers[::], samePower=False, outputLine
             list.sort(ordered_Line_Numbers)
 
 
-            if not samePower :
+            if forceRandPower :
                 randomPower = int(random.randint(1, len(power)))
                 print(ordered_Line_Numbers, randomPower)
             else :
@@ -59,50 +59,58 @@ def generate_sequence( max ) :
     :param max: The max number in sequence
     :return: The resulting sequence as a list
     """
-    sequence = list(range(1, 41))
+    sequence = list(range(1, max+1))
     return sequence
 
 def main(argv):
+    powers = list(range(1, 11))
+    numberSeqSize = 40
+    randPower = False
+    numLines = 4
+    lineLength = 6
+    
     ## Check run arguments
-    """if len(sys.argv) is 0 :
-        print("No user parameters entered!")
+    if len(sys.argv) is 1 :
+        print("No user parameters entered!","Using Defaults:","\n","Lines = 4, Size = 6, Random Powers = False")
+        print("Use -h to print help for runtime args:")
+        print('Number_Randomizer.py [parameters] -l OR --lines (Set number of lines. MIN = 1) -s OR --size (Set Numbers per line. MIN = 5) -r OR --randpower (Force random power per line)')
+
+        randomizer_seq(generate_sequence(numberSeqSize), powers, randPower, numLines, lineLength)
     else :
-        print(str(sys.argv))"""
+        """
+        Runtime args:
+        -l = number of lines
+        -s = how many numbers per line
+        -r = true/false set random power numbers (False = same power number per line)
+        """
+        try:
+            opts, args = getopt.getopt(argv, "l:s:rh", ["lines=", "size=", "randpower", "help"])
+        except getopt.GetoptError:
+            print('Number_Randomizer.py -l <number of lines> -s <numbers per line> -r (Force random power per line)')
+            sys.exit(2)
+        for opt, arg in opts:
+            if opt == '-h':
+                print('Number_Randomizer.py -l OR --lines (Set number of lines. MIN = 1) -s OR --size (Set Numbers per line. MIN = 5) -r OR --randpower (Force random power per line)')
+                sys.exit()
+            if opt in ("-l", "--lines"):
+                numLines = arg
+                if arg.isdigit():
+                    numLines = int(arg)
+                    print("numbLines {}".format(numLines))
+            if opt in ("-s", "--size"):
+                if arg.isdigit() :
+                    lineLength = int(arg)
+                    print("lineLength {}".format(lineLength))
+            if opt in ("-r", "--randpower"):
+                randPower = True
+                print("randPower {}".format(randPower))
+            #check = "ARGS: numLines {} lineLength {} randPower {}".format(numLines,lineLength,randPower)
+            #Sprint(check)
+        ### Specifying power numbers using range()
 
-    """
-    Runtime args:
-    -l = number of lines
-    -s = how many numbers per line
-    -r = true/false set random power numbers (False = same power number per line)
-    """
-    try:
-        opts, args = getopt.getopt(argv, "l:s:rh", ["lines=", "size=", "randpower", "help"])
-    except getopt.GetoptError:
-        print('Number_Randomizer.py -l <number of lines> -s <numbers per line> -r (Force random power per line)')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print('Number_Randomizer.py -l OR --lines (Set number of lines. MIN = 1) -s OR --size (Set Numbers per line. MIN = 5) -r OR --randpower (Force random power per line)')
-            sys.exit()
-        if opt in ("-l", "--lines"):
-            numLines = arg
-            if arg.isdigit():
-                numLines = int(arg)
-                print("numbLines {}".format(numLines))
-        if opt in ("-s", "--size"):
-            if arg.isdigit() :
-                lineLength = int(arg)
-                print("lineLength {}".format(lineLength))
-        if opt in ("-r", "--randpower"):
-            randPower = True
-            print("randPower {}".format(randPower))
-        #check = "ARGS: numLines {} lineLength {} randPower {}".format(numLines,lineLength,randPower)
-        #Sprint(check)
-    ### Specifying power numbers using range()
-    powers = list(range(1,11))
 
-    randomizer_seq(generate_sequence(41),powers,randPower, numLines, lineLength)
-    #randomizer_seq(generate_sequence(15),generate_sequence(21),False, 10, 6)
+        randomizer_seq(generate_sequence(41),powers,randPower, numLines, lineLength)
+        #randomizer_seq(generate_sequence(15),generate_sequence(21),False, 10, 6)
 
 numLines = 1
 lineLength = 5
