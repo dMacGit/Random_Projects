@@ -104,6 +104,11 @@ def main(argv):
     numLines = 4
     lineLength = 6
 
+    if sys.version_info.major < 3 :
+        print("User running Script with Python v{}.{}".format(sys.version_info.major,sys.version_info.minor))
+        print("Please run Script with Python v3 or higher")
+        exit(1)
+
     ## Check run arguments
     if len(sys.argv) is 1 :
         print("No user parameters entered!","Using Defaults:","\n","Lines = 4, Size = 6, Random Powers = False")
